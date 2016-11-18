@@ -30,7 +30,7 @@ Content-Disposition: form-data; name=""text""
 text default
 -----------------------------9051914041544843365972754266
 Content-Disposition: form-data; name=""file1""; filename=""a.txt""
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-16
 
 Content of a.txt.
 
@@ -47,7 +47,11 @@ Content-Type: text/html
         {
             var stream = new MemoryStream(Encoding.Default.GetBytes(_multipart));
             var parser = new MultipartForm(stream);
-            var content = parser.Parse();
+            var formData = parser.Parse();
+
+            Assert.AreEqual(3, formData.Content.Length);
+            var encoding = Encoding.GetEncoding(formData.Content[1].Charset);
+            Console.WriteLine(encoding.GetString(formData.Content[1].Content));
         }
     }
 }
