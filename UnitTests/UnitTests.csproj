@@ -50,7 +50,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MultipartFormParser.csproj">
+    <ProjectReference Include="..\MultipartFormParser\MultipartFormParser.csproj">
       <Project>{7d802199-3bff-4aac-8b72-3a3e7feff73b}</Project>
       <Name>MultipartFormParser</Name>
     </ProjectReference>

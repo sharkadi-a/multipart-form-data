@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipartFormParser", "MultipartFormParser.csproj", "{7D802199-3BFF-4AAC-8B72-3A3E7FEFF73B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipartFormParser", "MultipartFormParser\MultipartFormParser.csproj", "{7D802199-3BFF-4AAC-8B72-3A3E7FEFF73B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{8C34513F-DF97-47F5-A2A6-C54F5309F176}"
 EndProject
