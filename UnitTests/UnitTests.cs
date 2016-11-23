@@ -53,5 +53,18 @@ Content-Type: text/html
             var encoding = Encoding.GetEncoding(formData.Content[1].Charset);
             Console.WriteLine(encoding.GetString(formData.Content[1].Content));
         }
+
+        [Test]
+        public void TestPostPngImage()
+        {
+            var parser = new MultipartForm(new MemoryStream(Encoding.Default.GetBytes(TestResources._225_Request)));
+            var data = parser.Parse();
+            Assert.AreEqual(1, data.Content.Length);
+            var image = data.Content.Single();
+            Assert.AreEqual("image/png", image.ContentType);
+            Assert.AreEqual("f", image.Name);
+            Assert.AreEqual("sample-icon.png", image.Filename);
+            Assert.NotNull(image.Content);
+        }
     }
 }

@@ -100,13 +100,13 @@ namespace MultipartFormParser
                     var contentTypeMatch = _contentTypeRegex.Match(line);
                     if (contentTypeMatch.Success) item.ContentType = contentTypeMatch.Value;
                     var charsetMatch = _charsetRegex.Match(line);
-                    if (charsetMatch.Success) item.Charset = charsetMatch.Value;
+                    if (charsetMatch.Success) item.Charset = charsetMatch.Value.Trim();
                 }
                 else if (line.StartsWith("Content-Transfer-Encoding:"))
                 {
                     var contentTransferEncodingMatch = _contentTransferEncoding.Match(line);
                     if (contentTransferEncodingMatch.Success)
-                        item.ContentTransferEncoding = contentTransferEncodingMatch.Value;
+                        item.ContentTransferEncoding = contentTransferEncodingMatch.Value.Trim();
                 }
                 else if (string.IsNullOrWhiteSpace(line)) appendData = true;
             }
