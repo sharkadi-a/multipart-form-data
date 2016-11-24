@@ -61,32 +61,12 @@ namespace UnitTests {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на POST http://htmlbook.ru/example/ HTTP/1.1
-        ///Host: htmlbook.ru
-        ///Connection: keep-alive
-        ///Content-Length: 44780
-        ///Cache-Control: max-age=0
-        ///Origin: http://htmlbook.ru
-        ///Upgrade-Insecure-Requests: 1
-        ///User-Agent: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36
-        ///Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryKBXQnbxQMh875BMf
-        ///Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
-        ///DNT: 1
-        ///Referer: http://htmlb [остаток строки не уместился]&quot;;.
+        ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static string _225_Request {
+        internal static byte[] RawPostRequest {
             get {
-                return ResourceManager.GetString("_225_Request", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap sample_icon {
-            get {
-                object obj = ResourceManager.GetObject("sample_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("RawPostRequest", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

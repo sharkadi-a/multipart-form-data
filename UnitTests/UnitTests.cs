@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using MultipartFormParser;
 using NUnit.Framework;
 
@@ -45,7 +48,7 @@ Content-Type: text/html
         [Test]
         public void Test()
         {
-            var stream = new MemoryStream(Encoding.Default.GetBytes(_multipart));
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(_multipart));
             var parser = new MultipartForm(stream);
             var formData = parser.Parse();
 
@@ -57,7 +60,7 @@ Content-Type: text/html
         [Test]
         public void TestPostPngImage()
         {
-            var parser = new MultipartForm(new MemoryStream(Encoding.Default.GetBytes(TestResources._225_Request)));
+            var parser = new MultipartForm(new MemoryStream(TestResources.RawPostRequest));
             var data = parser.Parse();
             Assert.AreEqual(1, data.Content.Length);
             var image = data.Content.Single();
@@ -65,6 +68,12 @@ Content-Type: text/html
             Assert.AreEqual("f", image.Name);
             Assert.AreEqual("sample-icon.png", image.Filename);
             Assert.NotNull(image.Content);
+
+            File.WriteAllBytes("d:\\test.png", image.Content);
+
+            //var decoder = new PngBitmapDecoder(new MemoryStream(image.Content), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            //BitmapSource bitmapSource = decoder.Frames[0];
+
         }
     }
 }

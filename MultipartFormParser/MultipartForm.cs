@@ -47,26 +47,24 @@ namespace MultipartFormParser
                     {
                         isContentBegin = true;
                         if (!isMultipart) throw new Exception();
-                        if (!string.IsNullOrEmpty(boundary)) return ParseBoundary(boundary, r);
+                        if (!string.IsNullOrEmpty(boundary)) return ParseWithBoundary(boundary, r);
                         continue;
                     }
                     if (isMultipart && isContentBegin)
                     {
                         boundary = line;
-                        return ParseBoundary(boundary, r);
+                        return ParseWithBoundary(boundary, r);
                     }
                 }
             }
             throw new Exception();
         }
 
-        private MultipartFormData ParseBoundary(string boundary, StreamReader reader)
+        private MultipartFormData ParseWithBoundary(string boundary, StreamReader reader)
         {
             string line = null;
             IList<MultipartFormDataItem> content = new List<MultipartFormDataItem>(10);
             MultipartFormDataItem item = new MultipartFormDataItem();
-            var appendData = false;
-            StringBuilder data = new StringBuilder(1000);
             bool first = true;
             while ((line = reader.ReadLine()) != null)
             {
@@ -77,16 +75,10 @@ namespace MultipartFormParser
                         first = false;
                         continue;
                     }
-                    item.Content = Encoding.ASCII.GetBytes(data.ToString());
                     content.Add(item);
                     item = new MultipartFormDataItem();
-                    data = new StringBuilder(1000);
-                    appendData = false;
                 }
-                else if (appendData)
-                {
-                    data.Append(line);
-                }
+
                 else if (line.StartsWith("Content-Disposition:"))
                 {
                     if (!line.Contains("form-data")) throw new Exception();
@@ -98,7 +90,7 @@ namespace MultipartFormParser
                 else if (line.StartsWith("Content-Type:"))
                 {
                     var contentTypeMatch = _contentTypeRegex.Match(line);
-                    if (contentTypeMatch.Success) item.ContentType = contentTypeMatch.Value;
+                    if (contentTypeMatch.Success) item.ContentType = contentTypeMatch.Value.Trim();
                     var charsetMatch = _charsetRegex.Match(line);
                     if (charsetMatch.Success) item.Charset = charsetMatch.Value.Trim();
                 }
@@ -108,9 +100,37 @@ namespace MultipartFormParser
                     if (contentTransferEncodingMatch.Success)
                         item.ContentTransferEncoding = contentTransferEncodingMatch.Value.Trim();
                 }
-                else if (string.IsNullOrWhiteSpace(line)) appendData = true;
+                else if (string.IsNullOrWhiteSpace(line))
+                {
+                    item.Content = ReadToNextBoundary(boundary, reader);
+                }
             }
             return new MultipartFormData() {Content = content.ToArray()};
+        }
+
+        private byte[] ReadToNextBoundary(string boundary, StreamReader reader)
+        {
+            byte b = 0;
+            var buffer = new List<byte>(1000);
+            var data = new List<byte>(1000);
+            while ((b = (byte) reader.Read()) != -1)
+            {
+                buffer.Add(b);
+                if (b == '\n')
+                {
+                    var line = Encoding.ASCII.GetString(buffer.ToArray());
+                    if (line.Contains(boundary))
+                    {
+                        return data.ToArray();
+                    }
+                    else
+                    {
+                        data.AddRange(buffer);
+                        buffer.Clear();
+                    }
+                }
+            }
+            throw new Exception("Could not find trailing boundary: " + boundary);
         }
     }
 }
