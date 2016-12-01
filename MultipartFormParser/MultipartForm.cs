@@ -110,17 +110,20 @@ namespace MultipartFormParser
 
         private byte[] ReadToNextBoundary(string boundary, StreamReader reader)
         {
-            byte b = 0;
+            int b = 0;
             var buffer = new List<byte>(1000);
             var data = new List<byte>(1000);
-            while ((b = (byte) reader.Read()) != -1)
+            while (true)
             {
-                buffer.Add(b);
-                if (b == '\n')
+                if (b == -1) throw new Exception("Could not find trailing boundary: " + boundary);
+                b = reader.Read();
+                if (b != -1) buffer.Add((byte)b);
+                if (b == '\n' || b == -1)
                 {
                     var line = Encoding.ASCII.GetString(buffer.ToArray());
                     if (line.Contains(boundary))
                     {
+                        data.RemoveRange(data.Count - 3, 2);
                         return data.ToArray();
                     }
                     else
@@ -130,7 +133,6 @@ namespace MultipartFormParser
                     }
                 }
             }
-            throw new Exception("Could not find trailing boundary: " + boundary);
         }
     }
 }
