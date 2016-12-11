@@ -103,6 +103,8 @@ namespace MultipartFormParser
                 else if (string.IsNullOrWhiteSpace(line))
                 {
                     item.Content = ReadToNextBoundary(boundary, reader);
+                    content.Add(item);
+                    item = new MultipartFormDataItem();
                 }
             }
             return new MultipartFormData() {Content = content.ToArray()};
