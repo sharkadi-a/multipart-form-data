@@ -69,7 +69,7 @@ Content-Type: text/html
             Assert.AreEqual("sample-icon.png", image.Filename);
             Assert.NotNull(image.Content);
 
-            File.WriteAllBytes("d:\\test.png", image.Content);
+            File.WriteAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "test.png"), image.Content);
 
             //var decoder = new PngBitmapDecoder(new MemoryStream(image.Content), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
             //BitmapSource bitmapSource = decoder.Frames[0];
