@@ -29,7 +29,7 @@ namespace MultipartFormParser
         public MultipartFormData Parse()
         {
             if (!_stream.CanRead) throw new Exception("Stream should support reading");
-            using (var r = new StreamReader(_stream, Encoding.ASCII))
+            using (var r = new StreamReader(_stream))
             {
                 string line = null, boundary = null;
                 bool isMultipart = false, isContentBegin = false;
@@ -65,21 +65,20 @@ namespace MultipartFormParser
             string line = null;
             IList<MultipartFormDataItem> content = new List<MultipartFormDataItem>(10);
             MultipartFormDataItem item = new MultipartFormDataItem();
-            bool first = true;
+            //bool first = true;
             while ((line = reader.ReadLine()) != null)
             {
-                if (line.Contains(boundary))
-                {
-                    if (first)
-                    {
-                        first = false;
-                        continue;
-                    }
-                    content.Add(item);
-                    item = new MultipartFormDataItem();
-                }
-
-                else if (line.StartsWith("Content-Disposition:"))
+                //if (line.Contains(boundary))
+                //{
+                //    if (first)
+                //    {
+                //        first = false;
+                //        continue;
+                //    }
+                //    content.Add(item);
+                //    item = new MultipartFormDataItem();
+                //}
+                if (line.StartsWith("Content-Disposition:"))
                 {
                     if (!line.Contains("form-data")) throw new Exception();
                     var nameMatch = _nameRegex.Match(line);
@@ -122,7 +121,7 @@ namespace MultipartFormParser
                 if (b != -1) buffer.Add((byte)b);
                 if (b == '\n' || b == -1)
                 {
-                    var line = Encoding.ASCII.GetString(buffer.ToArray());
+                    var line = Encoding.Default.GetString(buffer.ToArray());
                     if (line.Contains(boundary))
                     {
                         data.RemoveRange(data.Count - 3, 2);
