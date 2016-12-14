@@ -49,7 +49,11 @@ namespace MultipartFormParser
                 {
                     isContentBegin = true;
                     if (!isMultipart) throw new Exception();
-                    if (!string.IsNullOrEmpty(boundary)) return ParseWithBoundary(boundary, r);
+                    if (!string.IsNullOrEmpty(boundary))
+                    {
+                        data = ParseWithBoundary(boundary, reader);
+                        return false;
+                    }
                     return true;
                 }
                 if (isMultipart && isContentBegin)
@@ -66,16 +70,12 @@ namespace MultipartFormParser
 
         private MultipartFormData ParseWithBoundary(string boundary, StreamLineReader reader)
         {
-            throw new NotImplementedException();
-        }
-
-        private MultipartFormData ParseWithBoundary(string boundary, StreamReader reader)
-        {
-            string line = null;
             IList<MultipartFormDataItem> content = new List<MultipartFormDataItem>(10);
             MultipartFormDataItem item = new MultipartFormDataItem();
-            while ((line = reader.ReadLine()) != null)
+            bool found = false;
+            reader.Read(bytes =>
             {
+                string line = Encoding.ASCII.GetString(bytes);
                 if (line.StartsWith("Content-Disposition:"))
                 {
                     if (!line.Contains("form-data")) throw new Exception();
@@ -83,6 +83,7 @@ namespace MultipartFormParser
                     var filenameMatch = _filenameRegex.Match(line);
                     if (nameMatch.Success) item.Name = nameMatch.Value;
                     if (filenameMatch.Success) item.Filename = filenameMatch.Value;
+                    found = true;
                 }
                 else if (line.StartsWith("Content-Type:"))
                 {
@@ -97,41 +98,33 @@ namespace MultipartFormParser
                     if (contentTransferEncodingMatch.Success)
                         item.ContentTransferEncoding = contentTransferEncodingMatch.Value.Trim();
                 }
-                else if (string.IsNullOrWhiteSpace(line))
+                else if (found && string.IsNullOrWhiteSpace(line))
                 {
                     item.Content = ReadToNextBoundary(boundary, reader);
                     content.Add(item);
                     item = new MultipartFormDataItem();
+                    found = false;
                 }
-            }
-            return new MultipartFormData() {Content = content.ToArray()};
+                return true;
+            });
+            return new MultipartFormData() { Content = content.ToArray() };
         }
 
-        private byte[] ReadToNextBoundary(string boundary, StreamReader reader)
+        private byte[] ReadToNextBoundary(string boundary, StreamLineReader reader)
         {
-            int b = 0;
-            var buffer = new List<byte>(1000);
             var data = new List<byte>(1000);
-            while (true)
+            reader.Read(bytes =>
             {
-                if (b == -1) throw new Exception("Could not find trailing boundary: " + boundary);
-                b = reader.Read();
-                if (b != -1) buffer.Add((byte)b);
-                if (b == '\n' || b == -1)
+                string line = Encoding.ASCII.GetString(bytes.ToArray());
+                if (line.Contains(boundary))
                 {
-                    var line = Encoding.Default.GetString(buffer.ToArray());
-                    if (line.Contains(boundary))
-                    {
-                        data.RemoveRange(data.Count - 3, 2);
-                        return data.ToArray();
-                    }
-                    else
-                    {
-                        data.AddRange(buffer);
-                        buffer.Clear();
-                    }
+                    data.RemoveRange(data.Count - 3, 2);
+                    return false;
                 }
-            }
+                data.AddRange(bytes);
+                return true;
+            });
+            return data.ToArray();
         }
     }
 }
