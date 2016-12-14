@@ -29,35 +29,44 @@ namespace MultipartFormParser
         public MultipartFormData Parse()
         {
             if (!_stream.CanRead) throw new Exception("Stream should support reading");
-            using (var r = new StreamReader(_stream))
+            var reader = new StreamLineReader(_stream);
+
+            string boundary = null;
+            bool isMultipart = false, isContentBegin = false;
+            MultipartFormData data = null;
+            reader.Read(bytes =>
             {
-                string line = null, boundary = null;
-                bool isMultipart = false, isContentBegin = false;
-                while ((line = r.ReadLine()) != null)
+                string line = Encoding.ASCII.GetString(bytes);
+                if (line.StartsWith("Content-Type:"))
                 {
-                    if (line.StartsWith("Content-Type:"))
-                    {
-                        isMultipart = true;
-                        if (!line.Contains("multipart/form-data")) throw new Exception();
-                        var boundaryMatch = boundaryRegex.Match(line);
-                        if (boundaryMatch.Success) boundary = boundaryMatch.Value;
-                        continue;
-                    }
-                    if (string.IsNullOrWhiteSpace(line))
-                    {
-                        isContentBegin = true;
-                        if (!isMultipart) throw new Exception();
-                        if (!string.IsNullOrEmpty(boundary)) return ParseWithBoundary(boundary, r);
-                        continue;
-                    }
-                    if (isMultipart && isContentBegin)
-                    {
-                        boundary = line;
-                        return ParseWithBoundary(boundary, r);
-                    }
+                    isMultipart = true;
+                    if (!line.Contains("multipart/form-data")) throw new Exception();
+                    var boundaryMatch = boundaryRegex.Match(line);
+                    if (boundaryMatch.Success) boundary = boundaryMatch.Value;
+                    return true;
                 }
-            }
-            throw new Exception();
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    isContentBegin = true;
+                    if (!isMultipart) throw new Exception();
+                    if (!string.IsNullOrEmpty(boundary)) return ParseWithBoundary(boundary, r);
+                    return true;
+                }
+                if (isMultipart && isContentBegin)
+                {
+                    boundary = line;
+                    data = ParseWithBoundary(boundary, reader);
+                    return false;
+                }
+                return true;
+            });
+            if (data == null) throw new Exception();
+            return data;
+        }
+
+        private MultipartFormData ParseWithBoundary(string boundary, StreamLineReader reader)
+        {
+            throw new NotImplementedException();
         }
 
         private MultipartFormData ParseWithBoundary(string boundary, StreamReader reader)
@@ -65,19 +74,8 @@ namespace MultipartFormParser
             string line = null;
             IList<MultipartFormDataItem> content = new List<MultipartFormDataItem>(10);
             MultipartFormDataItem item = new MultipartFormDataItem();
-            //bool first = true;
             while ((line = reader.ReadLine()) != null)
             {
-                //if (line.Contains(boundary))
-                //{
-                //    if (first)
-                //    {
-                //        first = false;
-                //        continue;
-                //    }
-                //    content.Add(item);
-                //    item = new MultipartFormDataItem();
-                //}
                 if (line.StartsWith("Content-Disposition:"))
                 {
                     if (!line.Contains("form-data")) throw new Exception();
