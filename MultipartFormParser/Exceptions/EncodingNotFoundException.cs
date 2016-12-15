@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MultipartFormParser.Exceptions
 {
-    public class EncodingNotFoundException : Exception
+    public class UnknownEncodingException : Exception
     {
-        public EncodingNotFoundException()
+        public UnknownEncodingException()
         {
             
         }
 
-        public EncodingNotFoundException(string message) : base(message)
+        public UnknownEncodingException(string charsetName) : base("Encoding not found: " + charsetName)
         {
             
         }

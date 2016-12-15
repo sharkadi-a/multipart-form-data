@@ -63,10 +63,27 @@ namespace UnitTests {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] RawPostRequest {
+        internal static byte[] SampleBinaryFormData {
             get {
-                object obj = ResourceManager.GetObject("RawPostRequest", resourceCulture);
+                object obj = ResourceManager.GetObject("SampleBinaryFormData", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на POST / HTTP/1.1
+        ///Host: localhost:8000
+        ///User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:29.0) Gecko/20100101 Firefox/29.0
+        ///Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        ///Accept-Language: en-US,en;q=0.5
+        ///Accept-Encoding: gzip, deflate
+        ///Cookie: __atuvc=34%7C7; permanent=0; _gitlab_session=226ad8a0be43681acf38c2fab9497240; __profilin=p%3Dt; request_method=GET
+        ///Connection: keep-alive
+        ///Content-Type: _multipart/form-data; boundary=---------------------------90519140415448433659727542 [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string SampleTextFormData {
+            get {
+                return ResourceManager.GetString("SampleTextFormData", resourceCulture);
             }
         }
     }

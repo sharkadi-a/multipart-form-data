@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,7 +12,6 @@ namespace MultipartFormParser
 {
     public class MultipartForm
     {
-        private readonly Stream _stream;
         private readonly Regex boundaryRegex = new Regex(@"(?<=boundary=)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
         private Regex _nameRegex = new Regex(@"(?<=name\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
         private Regex _filenameRegex = new Regex(@"(?<=filename\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
@@ -19,17 +19,13 @@ namespace MultipartFormParser
         private Regex _contentTypeRegex = new Regex(@"(?<=Content\-Type:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
         private Regex _contentTransferEncoding = new Regex(@"(?<=Content\-Transfer\-Encoding:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
 
-        public MultipartForm(Stream stream)
+        public MultipartFormData Data { get; private set; }
+
+        public void Parse(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             if (!stream.CanRead) throw new Exception("Stream should support reading");
-            _stream = stream;
-        }
-
-        public MultipartFormData Parse()
-        {
-            if (!_stream.CanRead) throw new Exception("Stream should support reading");
-            var reader = new StreamLineReader(_stream);
+            var reader = new StreamLineReader(stream);
 
             string boundary = null;
             bool isMultipart = false, isContentBegin = false;
@@ -42,7 +38,7 @@ namespace MultipartFormParser
                     isMultipart = true;
                     if (!line.Contains("multipart/form-data")) throw new Exception();
                     var boundaryMatch = boundaryRegex.Match(line);
-                    if (boundaryMatch.Success) boundary = boundaryMatch.Value;
+                    if (boundaryMatch.Success) boundary = boundaryMatch.Value.Trim();
                     return true;
                 }
                 if (string.IsNullOrWhiteSpace(line))
@@ -65,7 +61,7 @@ namespace MultipartFormParser
                 return true;
             });
             if (data == null) throw new Exception();
-            return data;
+            Data = data;
         }
 
         private MultipartFormData ParseWithBoundary(string boundary, StreamLineReader reader)
@@ -118,7 +114,7 @@ namespace MultipartFormParser
                 string line = Encoding.ASCII.GetString(bytes.ToArray());
                 if (line.Contains(boundary))
                 {
-                    data.RemoveRange(data.Count - 3, 2);
+                    data.RemoveRange(data.Count - 2, 2);
                     return false;
                 }
                 data.AddRange(bytes);

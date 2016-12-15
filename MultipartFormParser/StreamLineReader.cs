@@ -26,7 +26,7 @@ namespace MultipartFormParser
             {
                 b = _stream.ReadByte();
                 if (b != -1) buffer.Add((byte)b);
-                if (b == '\n' || b == -1)
+                if (b == 0x0A || b == -1)
                 {
                     System.Threading.Interlocked.Add(ref _count, 1);
                     var continueResult = lineReadFunc(_count, buffer.ToArray());
