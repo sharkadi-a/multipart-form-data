@@ -10,6 +10,7 @@ namespace MultipartFormParser
     internal sealed class StreamLineReader
     {
         private readonly Stream _stream;
+        private long _count = 0;
 
         public StreamLineReader(Stream stream)
         {
@@ -17,7 +18,7 @@ namespace MultipartFormParser
             _stream = stream;
         }
 
-        public void Read(Func<byte[], bool> lineReadFunc)
+        public void Read(Func<long, byte[], bool> lineReadFunc)
         {
             int b = 0;
             var buffer = new List<byte>(1000);
@@ -27,7 +28,8 @@ namespace MultipartFormParser
                 if (b != -1) buffer.Add((byte)b);
                 if (b == '\n' || b == -1)
                 {
-                    var continueResult = lineReadFunc(buffer.ToArray());
+                    System.Threading.Interlocked.Add(ref _count, 1);
+                    var continueResult = lineReadFunc(_count, buffer.ToArray());
                     buffer.Clear();
                     if (!continueResult || b == -1) break;
                 }

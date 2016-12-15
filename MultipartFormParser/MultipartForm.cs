@@ -34,7 +34,7 @@ namespace MultipartFormParser
             string boundary = null;
             bool isMultipart = false, isContentBegin = false;
             MultipartFormData data = null;
-            reader.Read(bytes =>
+            reader.Read((c, bytes) =>
             {
                 string line = Encoding.ASCII.GetString(bytes);
                 if (line.StartsWith("Content-Type:"))
@@ -73,7 +73,7 @@ namespace MultipartFormParser
             IList<MultipartFormDataItem> content = new List<MultipartFormDataItem>(10);
             MultipartFormDataItem item = new MultipartFormDataItem();
             bool found = false;
-            reader.Read(bytes =>
+            reader.Read( (c, bytes) =>
             {
                 string line = Encoding.ASCII.GetString(bytes);
                 if (line.StartsWith("Content-Disposition:"))
@@ -113,7 +113,7 @@ namespace MultipartFormParser
         private byte[] ReadToNextBoundary(string boundary, StreamLineReader reader)
         {
             var data = new List<byte>(1000);
-            reader.Read(bytes =>
+            reader.Read((c, bytes) =>
             {
                 string line = Encoding.ASCII.GetString(bytes.ToArray());
                 if (line.Contains(boundary))
