@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MultipartFormParser
 {
-    public interface IContentTransferDecoder<T>
+    public interface IContentTransferDecoder<out TEnumeration>
     {
         string ContentTransferEncodingName { get; }
-        IEnumerable<T> Decode(MultipartFormDataItem multipartFormDataItem);
+        IEnumerable<TEnumeration> Decode(MultipartFormDataItem multipartFormDataItem);
     }
 }

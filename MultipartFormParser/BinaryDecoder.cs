@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace MultipartFormParser
 {
+    [ContentTransferDecoderType("binary", typeof(byte))]
     internal class BinaryDecoder : IContentTransferDecoder<byte>
     {
         public string ContentTransferEncodingName { get { return "binary"; } }

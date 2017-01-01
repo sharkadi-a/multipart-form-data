@@ -8,6 +8,7 @@ namespace MultipartFormParser
 {
     internal class _8BitDecoder : IContentTransferDecoder<char>
     {
+        [ContentTransferDecoderType("8bit", typeof(char))]
         public string ContentTransferEncodingName { get { return "8bit"; } }
         public IEnumerable<char> Decode(MultipartFormDataItem multipartFormDataItem)
         {

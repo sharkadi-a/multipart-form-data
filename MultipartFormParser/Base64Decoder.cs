@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace MultipartFormParser
 {
+    [ContentTransferDecoderType("base64", typeof(byte))]
     internal class Base64Decoder : IContentTransferDecoder<byte>
     {
         public string ContentTransferEncodingName

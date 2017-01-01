@@ -8,7 +8,12 @@ namespace MultipartFormParser
 {
     internal class _7BitDecoder : IContentTransferDecoder<char>
     {
-        public string ContentTransferEncodingName { get { return "7bit"; } }
+        [ContentTransferDecoderType("7bit", typeof(char))]
+        public string ContentTransferEncodingName
+        {
+            get { return "7bit"; }
+        }
+
         public IEnumerable<char> Decode(MultipartFormDataItem multipartFormDataItem)
         {
             if (multipartFormDataItem == null) throw new ArgumentNullException("multipartFormDataItem");

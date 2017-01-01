@@ -43,6 +43,8 @@
     <Compile Include="8bitDecoder.cs" />
     <Compile Include="Base64Decoder.cs" />
     <Compile Include="BinaryDecoder.cs" />
+    <Compile Include="ContentTransferDecoderFactory.cs" />
+    <Compile Include="ContentTransferDecoderTypeAttribute.cs" />
     <Compile Include="Exceptions\EncodingNotFoundException.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="IContentTransferDecoder.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="MultipartForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuotedPrintableDecoder.cs" />
+    <Compile Include="ReflectionHelper.cs" />
     <Compile Include="StreamLineReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

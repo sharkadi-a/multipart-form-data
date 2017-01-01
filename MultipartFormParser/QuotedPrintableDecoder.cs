@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MultipartFormParser
 {
+    [ContentTransferDecoderType("quoted-printable", typeof(char))]
     internal class QuotedPrintableDecoder : IContentTransferDecoder<char>
     {
         public string ContentTransferEncodingName { get { return "quoted-printable"; } }
