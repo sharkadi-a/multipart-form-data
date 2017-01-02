@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace MultipartFormParser
+namespace MultipartFormParser.ContentTransferDecoders
 {
     public interface IContentTransferDecoder<out TEnumeration>
     {

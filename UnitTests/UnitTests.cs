@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MultipartFormParser;
+using MultipartFormParser.ContentDecoders;
 using NUnit.Framework;
 
 namespace UnitTests
@@ -45,9 +46,10 @@ namespace UnitTests
 
             using (var temp = new TemproaryDirectory())
             {
-                using (Image img = Image.FromStream(new MemoryStream(image.Content)))
+                var decoder = ContentDecoderFactory.FindAndCreateInstance<Image>(image);
+                using (Image img = decoder.Decode())
                 {
-                    img.Save(temp.AppendPath("sample-icon.png"), ImageFormat.Png);
+                    img.Save(temp.AppendPath("sample-icon.png"), ((ImageContentDecoder)decoder).ImageFormat);
                 }
             }
         }

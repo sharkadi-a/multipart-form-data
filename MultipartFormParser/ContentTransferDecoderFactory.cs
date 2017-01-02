@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MultipartFormParser.ContentTransferDecoders;
+using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser
 {
@@ -18,7 +19,7 @@ namespace MultipartFormParser
 
         public static void Refresh()
         {
-            _contentTypes = ReflectionHelper.FindAllTypesMatching();            
+            _contentTypes = ReflectionHelper.FindAllTypesMatching<ContentTransferDecoderTypeAttribute>();            
         }
 
         public static IContentTransferDecoder<char> Create7BitDecoder()
@@ -68,7 +69,7 @@ namespace MultipartFormParser
         {
             var type = FindType<TEnumeration>(contentTransferName);
             if (type == null) return null;
-            if (type != typeof(IContentTransferDecoder<TEnumeration>)) throw new Exception();
+            //if (type != typeof(IContentTransferDecoder<TEnumeration>)) throw new Exception();
             return (IContentTransferDecoder<TEnumeration>)Activator.CreateInstance(type);
         } 
     }
