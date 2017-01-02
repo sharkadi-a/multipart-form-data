@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MultipartFormParser
+namespace MultipartFormParser.ContentTransferDecoders
 {
     [ContentTransferDecoderType("quoted-printable", typeof(char))]
     internal class QuotedPrintableDecoder : IContentTransferDecoder<char>
@@ -17,7 +14,7 @@ namespace MultipartFormParser
 
             char[] escapeArray = new char[3];
             int escapeIdx = 0;
-            foreach (var ch in new _7BitDecoder().Decode(multipartFormDataItem))
+            foreach (var ch in new Char7BitDecoder().Decode(multipartFormDataItem))
             {
                 if (ch != '=') yield return ch;
                 escapeArray[escapeIdx++] = ch;

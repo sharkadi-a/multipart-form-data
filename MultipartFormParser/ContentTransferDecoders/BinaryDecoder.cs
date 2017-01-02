@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MultipartFormParser
+namespace MultipartFormParser.ContentTransferDecoders
 {
     [ContentTransferDecoderType("binary", typeof(byte))]
     internal class BinaryDecoder : IContentTransferDecoder<byte>

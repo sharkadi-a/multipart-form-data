@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MultipartFormParser.ContentTransferDecoders;
 
 namespace MultipartFormParser
 {
@@ -22,12 +23,12 @@ namespace MultipartFormParser
 
         public static IContentTransferDecoder<char> Create7BitDecoder()
         {
-            return new _7BitDecoder();
+            return new Char7BitDecoder();
         }
 
         public static IContentTransferDecoder<char> Create8BitDecoder()
         {
-            return new _8BitDecoder();
+            return new Char8BitDecoder();
         }
 
         public static IContentTransferDecoder<char> CreateQuotedPrintableDecoder()
@@ -45,22 +46,27 @@ namespace MultipartFormParser
             return new BinaryDecoder();
         }
 
-        public static Type[] FindAllForEnumeration<TEnumeration>()
-        {
-            return ReflectionHelper.Filter(_contentTypes, null, typeof(TEnumeration)).ToArray();
-        }
+        //public static Type[] FindAllForEnumeration<TEnumeration>()
+        //{
+        //    return ReflectionHelper.Filter(_contentTypes, null, typeof(TEnumeration)).ToArray();
+        //}
 
-        public static IContentTransferDecoder<TEnumeration> CreateInstance<TEnumeration>(Type contentTransferDecoderType)
+        //public static IContentTransferDecoder<TEnumeration> CreateInstance<TEnumeration>(Type contentTransferDecoderType)
+        //{
+        //    if (_contentTypes.All(t => t.Item2 != contentTransferDecoderType)) throw new Exception();
+        //    return (IContentTransferDecoder<TEnumeration>)Activator.CreateInstance(contentTransferDecoderType);
+        //}
+
+        public static Type FindType<TEnumeration>(string contentTransferName)
         {
-            if (_contentTypes.All(t => t.Item2 != contentTransferDecoderType)) throw new Exception();
-            return (IContentTransferDecoder<TEnumeration>)Activator.CreateInstance(contentTransferDecoderType);
+            return
+                ReflectionHelper.Filter(_contentTypes, contentTransferName, typeof (TEnumeration))
+                    .FirstOrDefault();
         }
 
         public static IContentTransferDecoder<TEnumeration> FindAndCreateInstance<TEnumeration>(string contentTransferName)
         {
-            var type =
-                ReflectionHelper.Filter(_contentTypes, contentTransferName, typeof(TEnumeration))
-                    .FirstOrDefault();
+            var type = FindType<TEnumeration>(contentTransferName);
             if (type == null) return null;
             if (type != typeof(IContentTransferDecoder<TEnumeration>)) throw new Exception();
             return (IContentTransferDecoder<TEnumeration>)Activator.CreateInstance(type);

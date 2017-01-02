@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MultipartFormParser
+namespace MultipartFormParser.ContentTransferDecoders
 {
     [ContentTransferDecoderType("base64", typeof(byte))]
     internal class Base64Decoder : IContentTransferDecoder<byte>
