@@ -13,7 +13,7 @@ namespace MultipartFormParser.Exceptions
             
         }
 
-        public UnknownEncodingException(string charsetName) : base("Encoding not found: " + charsetName)
+        public UnknownEncodingException(string charsetName) : base("Encoding not found for charset " + charsetName)
         {
             
         }

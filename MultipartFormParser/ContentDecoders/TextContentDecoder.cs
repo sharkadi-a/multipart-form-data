@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using MultipartFormParser.Exceptions;
 using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser.ContentDecoders
@@ -51,14 +52,10 @@ namespace MultipartFormParser.ContentDecoders
         {
             if (string.IsNullOrEmpty(MultipartFormDataItem.Charset))
             {
-                try
-                {
-                    return Encoding.GetEncoding(MultipartFormDataItem.Charset);
-                }
-                catch (ArgumentException)
-                {
-                    return null;
-                }
+                //return Encoding.GetEncoding(MultipartFormDataItem.Charset);
+                var encoding = EncodingResolver.FindEncoding(MultipartFormDataItem.Charset);
+                if (encoding == null) throw new UnknownEncodingException(MultipartFormDataItem.Charset);
+                return encoding;
             }
             return Encoding.ASCII;
         }

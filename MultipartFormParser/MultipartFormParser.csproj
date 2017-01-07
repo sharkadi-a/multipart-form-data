@@ -47,6 +47,7 @@
     <Compile Include="ContentDecoders\ImageContentDecoder.cs" />
     <Compile Include="ContentTransferDecoders\Byte7BitDecoder.cs" />
     <Compile Include="ContentTransferDecoders\Byte8BitDecoder.cs" />
+    <Compile Include="EncodingResolver.cs" />
     <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="ContentDecoders\TextContentDecoder.cs" />
     <Compile Include="ContentTransferDecoders\Char7BitDecoder.cs" />
@@ -55,7 +56,7 @@
     <Compile Include="ContentTransferDecoders\BinaryDecoder.cs" />
     <Compile Include="ContentTransferDecoderFactory.cs" />
     <Compile Include="ContentTransferDecoders\ContentTransferDecoderTypeAttribute.cs" />
-    <Compile Include="Exceptions\EncodingNotFoundException.cs" />
+    <Compile Include="Exceptions\UnknownEncodingException.cs" />
     <Compile Include="ContentTransferDecoders\IContentTransferDecoder.cs" />
     <Compile Include="MultipartFormData.cs" />
     <Compile Include="MultipartFormDataItem.cs" />
