@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MultipartFormParser.Exceptions;
 
 namespace MultipartFormParser.ContentDecoders

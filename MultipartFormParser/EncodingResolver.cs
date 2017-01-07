@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MultipartFormParser.Exceptions;
 
 namespace MultipartFormParser
 {
@@ -23,6 +21,11 @@ namespace MultipartFormParser
                 if (!EncodingFactories.ContainsKey(charSetName)) return null;
                 return EncodingFactories[charSetName]();
             }
+        }
+
+        public static string[] GetAllCharSetNames()
+        {
+            return EncodingFactories.Keys.ToArray();
         }
 
         public static void SetEncoding(string charSetName, Func<Encoding> encodingFactory)
