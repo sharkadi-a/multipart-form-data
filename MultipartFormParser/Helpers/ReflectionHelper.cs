@@ -36,7 +36,7 @@ namespace MultipartFormParser.Helpers
             Type elementType, params string[] mimeContentTypes)
         {
             IEnumerable<Tuple<ContentDecoderTypeAttribute, Type>> select = types;
-            if (elementType != null) select = select.Where(t => t.Item1.ElementType == elementType);
+            if (elementType != null) select = select.Where(t => t.Item1.ClrType == elementType);
             if (mimeContentTypes != null && mimeContentTypes.Length > 0)
                 select = select.Where(t => t.Item1.MimeContentTypes.Intersect(mimeContentTypes).Any());
             return select.Select(t => t.Item2);

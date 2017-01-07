@@ -3,6 +3,9 @@ using MultipartFormParser.Exceptions;
 
 namespace MultipartFormParser.ContentDecoders
 {
+    /// <summary>
+    /// This class is a common binary data decoder. First, it decodes data from transfer encdoing, and then it simply returns data from content of <see cref="MultipartFormDataItem"/>
+    /// </summary>
     internal class BinaryContentDecoder : IContentDecoder<byte[]>
     {
         public string[] MimeContentTypes { get { return new string[0]; } }
@@ -38,8 +41,7 @@ namespace MultipartFormParser.ContentDecoders
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
                 var byteDecoder =
-                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
-                        MultipartFormDataItem.ContentTransferEncoding);
+                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(MultipartFormDataItem);
                 if (byteDecoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = byteDecoder.Decode(MultipartFormDataItem).ToArray();
             }

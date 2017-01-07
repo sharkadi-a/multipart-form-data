@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace MultipartFormParser.ContentTransferDecoders
 {
+    /// <summary>
+    /// This class decodes data from quoted-printable content transfer encoding into array of characters. Such decoder should be used by transfer environments, which treat data as a set of characters, not bytes
+    /// https://en.wikipedia.org/wiki/Quoted-printable
+    /// </summary>
     [ContentTransferDecoderType("quoted-printable", typeof(char))]
     internal class QuotedPrintableDecoder : IContentTransferDecoder<char>
     {

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MultipartFormParser.ContentTransferDecoders
 {
+    /// <summary>
+    /// This class decodes data from Base64 content transfer encoding type into enumerable of bytes
+    /// </summary>
     [ContentTransferDecoderType("base64", typeof(byte))]
     internal class Base64Decoder : IContentTransferDecoder<byte>
     {

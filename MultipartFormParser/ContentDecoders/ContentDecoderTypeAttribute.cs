@@ -2,16 +2,31 @@
 
 namespace MultipartFormParser.ContentDecoders
 {
+    /// <summary>
+    /// This attribute is being used by ContentDecoderFactory to find appropriate decoders for specified MIME types and CLR types
+    /// </summary>
     public class ContentDecoderTypeAttribute : Attribute
     {
-        public Type ElementType { get; private set; }
+        /// <summary>
+        /// CLR type into which decoding of the annotated decoder should perform
+        /// </summary>
+        public Type ClrType { get; private set; }
+
+        /// <summary>
+        /// MIME types which are supported by the annotated decoder
+        /// </summary>
         public string[] MimeContentTypes { get; private set; }
 
-        public ContentDecoderTypeAttribute(Type elementType, params string[] mimeContentTypes)
+        /// <summary>
+        /// Adds an attribute to the decoder
+        /// </summary>
+        /// <param name="clrType">CLR type into which decoding of the annotated decoder should perform</param>
+        /// <param name="mimeContentTypes">MIME types which are supported by the annotated decoder</param>
+        public ContentDecoderTypeAttribute(Type clrType, params string[] mimeContentTypes)
         {
-            if (elementType == null) throw new ArgumentNullException("elementType");
+            if (clrType == null) throw new ArgumentNullException("clrType");
             if (mimeContentTypes == null) throw new ArgumentNullException("mimeContentTypes");
-            ElementType = elementType;
+            ClrType = clrType;
             MimeContentTypes = mimeContentTypes;
         }
     }

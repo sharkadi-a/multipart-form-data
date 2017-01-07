@@ -16,7 +16,7 @@ namespace UnitTests
         public void TestTextFormData()
         {
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(TestResources.SampleTextFormData));
-            var parser = new MultipartForm();
+            var parser = new MultipartFormParser.MultipartFormParser();
             parser.Parse(stream);
             var formData = parser.Data;
 
@@ -28,7 +28,7 @@ namespace UnitTests
         [Test]
         public void TestBinaryFormData()
         {
-            var parser = new MultipartForm();
+            var parser = new MultipartFormParser.MultipartFormParser();
             parser.Parse(new MemoryStream(TestResources.SampleBinaryFormData));
             var data = parser.Data;
             Assert.AreEqual(1, data.Content.Length);
@@ -40,10 +40,11 @@ namespace UnitTests
 
             using (var temp = new TemproaryDirectory())
             {
-                var decoder = ContentDecoderFactory.FindAndCreateInstance<Image>(image);
+                var decoder = ContentDecoderFactory.CreateImageContentDecoder(image);
+                Assert.IsTrue(decoder.CanDecode);
                 using (Image img = decoder.Decode())
                 {
-                    img.Save(temp.AppendPath("sample-icon.png"), ((ImageContentDecoder)decoder).ImageFormat);
+                    img.Save(temp.AppendPath("sample-icon.png"), decoder.ImageFormat);
                 }
             }
         }

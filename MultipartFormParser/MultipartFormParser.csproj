@@ -62,7 +62,7 @@
     <Compile Include="ContentTransferDecoders\IContentTransferDecoder.cs" />
     <Compile Include="MultipartFormData.cs" />
     <Compile Include="MultipartFormDataItem.cs" />
-    <Compile Include="MultipartForm.cs" />
+    <Compile Include="MultipartFormParser.cs" />
     <Compile Include="MultipartFormXmlDeserializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ContentTransferDecoders\QuotedPrintableDecoder.cs" />

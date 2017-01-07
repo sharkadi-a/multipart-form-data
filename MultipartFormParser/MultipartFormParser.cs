@@ -9,17 +9,27 @@ using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser
 {
-    public sealed class MultipartForm
+    /// <summary>
+    /// Multipart form parser from HTTP request
+    /// </summary>
+    public sealed class MultipartFormParser
     {
-        private readonly Regex boundaryRegex = new Regex(@"(?<=boundary=)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
-        private Regex _nameRegex = new Regex(@"(?<=name\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
-        private Regex _filenameRegex = new Regex(@"(?<=filename\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
-        private Regex _charsetRegex = new Regex(@"(?<=charset\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
-        private Regex _contentTypeRegex = new Regex(@"(?<=Content\-Type:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
-        private Regex _contentTransferEncoding = new Regex(@"(?<=Content\-Transfer\-Encoding:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
+        private readonly Regex _boundaryRegex = new Regex(@"(?<=boundary=)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
+        private readonly Regex _nameRegex = new Regex(@"(?<=name\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
+        private readonly Regex _filenameRegex = new Regex(@"(?<=filename\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
+        private readonly Regex _charsetRegex = new Regex(@"(?<=charset\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
+        private readonly Regex _contentTypeRegex = new Regex(@"(?<=Content\-Type:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
+        private readonly Regex _contentTransferEncoding = new Regex(@"(?<=Content\-Transfer\-Encoding:)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
 
+        /// <summary>
+        /// Result of form parsing (multi-part form content)
+        /// </summary>
         public MultipartFormData Data { get; private set; }
 
+        /// <summary>
+        /// Parses multipart form data raw HTTP-request from stream
+        /// </summary>
+        /// <param name="stream"></param>
         public void Parse(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -36,7 +46,7 @@ namespace MultipartFormParser
                 {
                     isMultipart = true;
                     if (!line.Contains("multipart/form-data")) throw new MultiPartFormParsingException("The stream is not multi-part form data");
-                    var boundaryMatch = boundaryRegex.Match(line);
+                    var boundaryMatch = _boundaryRegex.Match(line);
                     if (boundaryMatch.Success) boundary = boundaryMatch.Value.Trim();
                     return true;
                 }
@@ -73,7 +83,7 @@ namespace MultipartFormParser
                 string line = Encoding.ASCII.GetString(bytes);
                 if (line.StartsWith("Content-Disposition:"))
                 {
-                    if (!line.Contains("form-data")) throw new Exception();
+                    if (!line.Contains("form-data")) throw new MultiPartFormParsingException("The stream is not multi-part form data");
                     var nameMatch = _nameRegex.Match(line);
                     var filenameMatch = _filenameRegex.Match(line);
                     if (nameMatch.Success) item.Name = nameMatch.Value;

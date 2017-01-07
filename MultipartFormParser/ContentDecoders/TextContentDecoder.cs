@@ -5,6 +5,9 @@ using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser.ContentDecoders
 {
+    /// <summary>
+    /// This class is a common text decoder. First of all, it decodes data from transfer encdoing. It supports decoding from any data, that can be considered as text, thus, Content-Type should contain text, xml, javascript or json type classes.
+    /// </summary>
     internal class TextContentDecoder : IContentDecoder<string>
     {
         public string[] MimeContentTypes { get { return new string[0];} }
@@ -68,15 +71,13 @@ namespace MultipartFormParser.ContentDecoders
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
                 var charDecoder =
-                    ContentTransferDecoderFactory.FindAndCreateInstance<char>(
-                        MultipartFormDataItem.ContentTransferEncoding);
+                    ContentTransferDecoderFactory.FindAndCreateInstance<char>(MultipartFormDataItem);
                 if (charDecoder != null)
                 {
                     return new string(charDecoder.Decode(MultipartFormDataItem).ToArray());
                 }
                 var byteDecoder =
-                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
-                        MultipartFormDataItem.ContentTransferEncoding);
+                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(MultipartFormDataItem);
                 if (byteDecoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = byteDecoder.Decode(MultipartFormDataItem).ToArray();
             }

@@ -8,6 +8,10 @@ using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser.ContentDecoders
 {
+    /// <summary>
+    /// Content decoder for images from multi-part form item data. Use this class if content-type is image base type. Following image types are supported:
+    /// image/png, image/bmp, image/emf, image/exif, image/gif, image/x-icon, image/vnd.microsoft.icon, image/jpeg, image/pjpeg
+    /// </summary>
     [ContentDecoderType(typeof (Image), "image/png", "image/bmp", "image/emf", "image/exif", "image/gif", "image/x-icon",
         "image/vnd.microsoft.icon", "image/jpeg", "image/pjpeg")]
     public class ImageContentDecoder : IContentDecoder<Image>
@@ -77,8 +81,7 @@ namespace MultipartFormParser.ContentDecoders
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
                 var decoder =
-                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
-                        MultipartFormDataItem.ContentTransferEncoding);
+                    ContentTransferDecoderFactory.FindAndCreateInstance<byte>(MultipartFormDataItem);
                 if (decoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = decoder.Decode(MultipartFormDataItem).ToArray();
             }
