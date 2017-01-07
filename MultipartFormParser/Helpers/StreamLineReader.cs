@@ -4,7 +4,7 @@ using System.IO;
 
 namespace MultipartFormParser.Helpers
 {
-    internal sealed class StreamLineReader
+    internal class StreamLineReader
     {
         private readonly Stream _stream;
         private long _count = 0;

@@ -1,6 +1,6 @@
 ﻿namespace MultipartFormParser
 {
-    public class MultipartFormDataItem
+    public sealed class MultipartFormDataItem
     {
         public string Name { get; internal set; }
         public string Filename { get; internal set; }

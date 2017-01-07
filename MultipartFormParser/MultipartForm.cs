@@ -9,7 +9,7 @@ using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser
 {
-    public class MultipartForm
+    public sealed class MultipartForm
     {
         private readonly Regex boundaryRegex = new Regex(@"(?<=boundary=)(.*?)(?=(\;)|$)", RegexOptions.IgnoreCase);
         private Regex _nameRegex = new Regex(@"(?<=name\=\"")(.*?)(?=\"")", RegexOptions.IgnoreCase);
