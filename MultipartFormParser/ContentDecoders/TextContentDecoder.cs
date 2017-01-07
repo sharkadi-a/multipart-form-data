@@ -15,6 +15,7 @@ namespace MultipartFormParser.ContentDecoders
         {
             get
             {
+                if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
                 return Encoding != null && IsText() &&
                        (string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding) ||
                         ContentTransferDecoderFactory.FindType<char>(MultipartFormDataItem.ContentTransferEncoding) !=
@@ -62,7 +63,8 @@ namespace MultipartFormParser.ContentDecoders
 
         public string Decode()
         {
-            if (!CanDecode) throw new Exception();
+            if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
+            if (!CanDecode) throw new ContentDecodingException("Could not decode content");
             byte[] bytes = MultipartFormDataItem.Content;
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
@@ -76,7 +78,7 @@ namespace MultipartFormParser.ContentDecoders
                 var byteDecoder =
                     ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
                         MultipartFormDataItem.ContentTransferEncoding);
-                if (byteDecoder == null) throw new Exception();
+                if (byteDecoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = byteDecoder.Decode(MultipartFormDataItem).ToArray();
             }
             return GetEncodingFromCharSet().GetString(bytes);

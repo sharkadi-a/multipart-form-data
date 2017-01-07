@@ -48,6 +48,8 @@
     <Compile Include="ContentTransferDecoders\Byte7BitDecoder.cs" />
     <Compile Include="ContentTransferDecoders\Byte8BitDecoder.cs" />
     <Compile Include="EncodingResolver.cs" />
+    <Compile Include="Exceptions\ContentDecodingException.cs" />
+    <Compile Include="Exceptions\MultiPartFormParsingException.cs" />
     <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="ContentDecoders\TextContentDecoder.cs" />
     <Compile Include="ContentTransferDecoders\Char7BitDecoder.cs" />

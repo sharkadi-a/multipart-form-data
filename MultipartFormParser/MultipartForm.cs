@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using MultipartFormParser.Exceptions;
 using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser
@@ -37,7 +38,7 @@ namespace MultipartFormParser
                 if (line.StartsWith("Content-Type:"))
                 {
                     isMultipart = true;
-                    if (!line.Contains("multipart/form-data")) throw new Exception();
+                    if (!line.Contains("multipart/form-data")) throw new MultiPartFormParsingException("The stream is not multi-part form data");
                     var boundaryMatch = boundaryRegex.Match(line);
                     if (boundaryMatch.Success) boundary = boundaryMatch.Value.Trim();
                     return true;
@@ -45,7 +46,7 @@ namespace MultipartFormParser
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     isContentBegin = true;
-                    if (!isMultipart) throw new Exception();
+                    if (!isMultipart) throw new MultiPartFormParsingException("The stream is not multi-part form data");
                     if (!string.IsNullOrEmpty(boundary))
                     {
                         data = ParseWithBoundary(boundary, reader);
@@ -61,7 +62,7 @@ namespace MultipartFormParser
                 }
                 return true;
             });
-            if (data == null) throw new Exception();
+            if (data == null) throw new MultiPartFormParsingException("The stream is not multi-part form data");
             Data = data;
         }
 

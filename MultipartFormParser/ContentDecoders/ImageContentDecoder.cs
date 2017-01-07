@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MultipartFormParser.Exceptions;
 using MultipartFormParser.Helpers;
 
 namespace MultipartFormParser.ContentDecoders
@@ -43,6 +44,7 @@ namespace MultipartFormParser.ContentDecoders
         {
             get
             {
+                if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
                 return !string.IsNullOrEmpty(MultipartFormDataItem.ContentType) &&
                        MultipartFormDataItem.ContentType.Contains("image") &&
                        (string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding) ||
@@ -55,6 +57,7 @@ namespace MultipartFormParser.ContentDecoders
         {
             get
             {
+                if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
                 if (!CanDecode) return null;
                 if (MultipartFormDataItem.ContentType.ToLower().Contains("png")) return ImageFormat.Png;
                 if (MultipartFormDataItem.ContentType.ToLower().Contains("bmp")) return ImageFormat.Bmp;
@@ -71,14 +74,15 @@ namespace MultipartFormParser.ContentDecoders
 
         public Image Decode()
         {
-            if (!CanDecode) throw new Exception();
+            if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
+            if (!CanDecode) throw new ContentDecodingException("Could not decode content");
             byte[] bytes = MultipartFormDataItem.Content;
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
                 var decoder =
                     ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
                         MultipartFormDataItem.ContentTransferEncoding);
-                if (decoder == null) throw new Exception();
+                if (decoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = decoder.Decode(MultipartFormDataItem).ToArray();
             }
             return Image.FromStream(new MemoryStream(bytes));

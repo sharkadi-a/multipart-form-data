@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using MultipartFormParser.Exceptions;
 
 namespace MultipartFormParser.ContentDecoders
 {
@@ -22,7 +23,7 @@ namespace MultipartFormParser.ContentDecoders
         {
             get
             {
-                if (MultipartFormDataItem == null) throw new Exception();
+                if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
                 return (string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding) ||
                         ContentTransferDecoderFactory.FindType<byte>(MultipartFormDataItem.ContentTransferEncoding) !=
                         null) &&
@@ -32,15 +33,15 @@ namespace MultipartFormParser.ContentDecoders
 
         public byte[] Decode()
         {
-            if (MultipartFormDataItem == null) throw new Exception();
-            if (!CanDecode) throw new Exception();
+            if (MultipartFormDataItem == null) throw new ContentDecodingException("MultipartFormDataItem must not be null");
+            if (!CanDecode) throw new ContentDecodingException("Could not decode content");
             var bytes = MultipartFormDataItem.Content;
             if (!string.IsNullOrEmpty(MultipartFormDataItem.ContentTransferEncoding))
             {
                 var byteDecoder =
                     ContentTransferDecoderFactory.FindAndCreateInstance<byte>(
                         MultipartFormDataItem.ContentTransferEncoding);
-                if (byteDecoder == null) throw new Exception();
+                if (byteDecoder == null) throw new ContentDecodingException("Could not decode content");
                 bytes = byteDecoder.Decode(MultipartFormDataItem).ToArray();
             }
             return bytes;
