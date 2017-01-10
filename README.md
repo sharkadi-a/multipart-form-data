@@ -1,4 +1,4 @@
-# HTML Multi-part for data parsing and content decoding
+# HTML Multi-part form data parsing and content decoding
 This repository was initially created for personal needs, but later developed into own open-source solution. 
 MultiPartFormDataParse contains multiple classes for:
 * Parsing raw HTML multipart/form-data into array of form items;
