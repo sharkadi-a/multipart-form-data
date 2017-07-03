@@ -22,7 +22,22 @@ namespace UnitTests
 
             Assert.AreEqual(3, formData.Content.Length);
             var encoding = Encoding.GetEncoding(formData.Content[1].Charset);
-            Console.WriteLine(encoding.GetString(formData.Content[1].Content));
+            var strData = encoding.GetString(formData.Content[1].Content);
+            Assert.IsFalse(strData.EndsWith("\r\n"));
+        }
+
+        [Test]
+        public void TestUnixLf()
+        {
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(TestResources.LF));
+            var parser = new MultipartFormParser.MultipartFormParser();
+            parser.Parse(stream);
+            var formData = parser.Data;
+
+            Assert.AreEqual(1, formData.Content.Length);
+            var encoding = Encoding.GetEncoding(formData.Content.First().Charset);
+            var strData = encoding.GetString(formData.Content.First().Content);
+            Assert.IsFalse(strData.EndsWith("\r"));
         }
 
         [Test]

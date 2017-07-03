@@ -7,21 +7,12 @@ Accept-Encoding: gzip, deflate
 Cookie: __atuvc=34%7C7; permanent=0; _gitlab_session=226ad8a0be43681acf38c2fab9497240; __profilin=p%3Dt; request_method=GET
 Connection: keep-alive
 Content-Type: _multipart/form-data; boundary=---------------------------9051914041544843365972754266
-Content-Length: 554
 
 -----------------------------9051914041544843365972754266
 Content-Disposition: form-data; name=""text""
 
-text default
+This
+is
+Linux-style
+Line endings
 -----------------------------9051914041544843365972754266
-Content-Disposition: form-data; name=""file1""; filename=""a.txt""
-Content-Type: text/plain; charset=utf-16
-
-Content of a.txt.
------------------------------9051914041544843365972754266
-Content-Disposition: form-data; name=""file2""; filename=""a.html""
-Content-Type: text/html
-
-<!DOCTYPE html><title>Content of a.html.</title>
-
------------------------------9051914041544843365972754266--

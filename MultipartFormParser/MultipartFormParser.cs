@@ -123,7 +123,9 @@ namespace MultipartFormParser
                 string line = Encoding.ASCII.GetString(bytes.ToArray());
                 if (line.Contains(boundary))
                 {
-                    data.RemoveRange(data.Count - 2, 2);
+                    // we need to erase line endings, botn Unix- and Windows-style
+                    if (data[data.Count - 1] == '\n') data.RemoveRange(data.Count - 1, 1);
+                    if (data[data.Count - 1] == '\r') data.RemoveRange(data.Count - 1, 1);
                     return false;
                 }
                 data.AddRange(bytes);
